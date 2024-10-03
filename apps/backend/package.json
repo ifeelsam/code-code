@@ -11,12 +11,14 @@
     "lint": "eslint src/"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "prisma": "^5.20.0"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@prisma/client": "5.20.0",
     "@types/express": "^5.0.0",
     "express": "^4.21.0",
     "hono": "^4.6.3"
