@@ -1,0 +1,22 @@
+{
+  "name": "backend",
+  "module": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "start": "bun dist/index.js",
+    "build": "tsup",
+    "dev": "bun ./src/index.ts ",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "hono": "^4.6.3"
+  }
+}
