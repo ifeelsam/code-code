@@ -1,10 +1,14 @@
-import { Hono } from "hono";
+import express from "express";
 
-const app = new Hono();
+const app = express();
+app.get("/", (req, res) => {
+  res.send("hellow world");
+});
 
-app.get("/", (c) => c.text("hellow"))
-
-export default {
-  port: 3002,
-  fetch: app.fetch
-}
+app.listen(3002, () => {
+  try {
+    console.log("here it is http://localhost:3002/");
+  } catch (e) {
+    console.log(e);
+  }
+});
