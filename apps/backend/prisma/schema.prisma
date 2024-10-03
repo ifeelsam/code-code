@@ -14,11 +14,32 @@ datasource db {
 }
 
 model Problems {
-  id          Int      @id @default(autoincrement())
+  id          Int          @id @default(autoincrement())
   title       String
   description String?
   examples    String
   testCases   String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  Submission  Submission[]
+}
+
+model User {
+  id         Int          @id @default(autoincrement())
+  email      String       @unique
+  username   String       @unique
+  submission Submission[]
+}
+
+model Submission {
+  id          Int      @id @default(autoincrement())
+  problemId   Int
+  language    String
+  code        String
+  memory      Float?
+  runtime     Float?
+  submittedat DateTime @default(now())
+  problem     Problems @relation(fields: [problemId], references: [id])
+  userId      Int?
+  user        User?    @relation(fields: [userId], references: [id])
 }

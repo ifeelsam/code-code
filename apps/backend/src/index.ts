@@ -1,7 +1,6 @@
 import express from "express";
-import router from "./problems.js"
-
-const problems = router;
+import problems from "./problems.js"
+import submit from "./submission.js"
 
 const app = express();
 app.use(express.json());
@@ -12,6 +11,7 @@ app.get("/", (req, res) => {
 });
 app.use("/problem", problems)
 
+app.use("/submit", submit)
 
 app.listen(3002, () => {
   try {
