@@ -5,12 +5,13 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   const prisma = new PrismaClient();
   try {
-    const { title, description, examples } = req.body;
+    const { title, testCases, description, examples } = req.body;
     const addProblem = await prisma.problems.create({
       data: {
         title,
         description,
         examples,
+        testCases
       },
     });
     res.json(addProblem);
@@ -33,7 +34,6 @@ router.put("/", async (req, res) => {
   const prisma = new PrismaClient();
   try {
     const data = req.body;
-    console.log(data)
     const updateProblem = await prisma.problems.update({
       where: { id: Number(data.id) },
       data: {

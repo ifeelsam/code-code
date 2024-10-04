@@ -1,5 +1,5 @@
 import express from "express";
-import problems from "./problems.js"
+import problem from "./problems.js"
 import submit from "./submission.js"
 
 const app = express();
@@ -9,7 +9,7 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("hellow world");
 });
-app.use("/problem", problems)
+app.use("/problem", problem)
 
 app.use("/submit", submit)
 

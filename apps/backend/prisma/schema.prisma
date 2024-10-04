@@ -36,6 +36,7 @@ model Submission {
   problemId   Int
   language    String
   code        String
+  status      String   @default("pending")
   memory      Float?
   runtime     Float?
   submittedat DateTime @default(now())
