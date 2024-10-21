@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   description: "Authentication forms built using the components.",
 }
 const actionCodeSettings = {
-  url: "http://localhost:3000",
+  url: "http://localhost:3001",
   handleCodeInApp: true,
 };
 

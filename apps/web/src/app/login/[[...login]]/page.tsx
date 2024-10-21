@@ -1,8 +1,13 @@
-import React from 'react'
+"use client"
 
-export default function login() {
+import { userAtom } from '@/store/atoms/user'
+import React from 'react'
+import { useRecoilValue } from 'recoil'
+
+export default function Login() {
+  const user = useRecoilValue(userAtom)
   return (
-    <div>hello ppl</div>
+    <div>you are loged in as {user.user}</div>
   )
 }
 

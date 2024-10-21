@@ -1,48 +1,83 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { app, provider } from "@/lib/auth"
-import { getAuth, GithubAuthProvider, GoogleAuthProvider, sendSignInLinkToEmail, signInWithPopup } from "firebase/auth";
-import { cn } from "@/lib/utils"
-import { Icons } from "@/components/icons"
-import { Input } from "./ui/input"
-import { Button } from "./ui/button"
+import * as React from "react";
+import { app, provider } from "@/lib/auth";
+import {
+  getAuth,
+  GithubAuthProvider,
+  GoogleAuthProvider,
+  sendSignInLinkToEmail,
+  signInWithPopup,
+} from "firebase/auth";
+import { cn } from "@/lib/utils";
+import { Icons } from "@/components/icons";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 import { useState } from "react";
-import { Label } from "./ui/label"
-import { error } from "console";
-interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
+import { Label } from "./ui/label";
+import { useRecoilState } from "recoil";
+import { userAtom } from "@/store/atoms/user";
+interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const actionCodeSettings = {
   url: "http://localhost:3000",
   handleCodeInApp: true,
 };
-export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
-  const [isLoading, setIsLoading] = React.useState<boolean>(false)
 
+export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [user, setUser] = useRecoilState(userAtom)
   const auth = getAuth(app);
   const [email, setEmail] = useState("");
 
   async function googleAuth() {
-    await signInWithPopup(auth, provider)
+    signInWithPopup(auth, provider)
       .then((data) => {
         const credentials = GoogleAuthProvider.credentialFromResult(data);
-        const token = credentials?.accessToken;
-        const user = data.user;
+        if (!credentials) {
+          return;
+        }
+        console.log(data.user) 
+        const {displayName, email, uid, photoURL} = data.user
+        setUser({
+          loading: false, 
+          user: {
+            email: email,
+            name: displayName,
+            photoURL,
+            uid
+          }
+        })
+        console.log(user)
       })
       .catch((error) => {
-        console.log(GoogleAuthProvider.credentialFromError(error))
-
-      })
+        console.log("error", error);
+        console.log(
+          "some loging error",
+          GoogleAuthProvider.credentialFromError(error),
+        );
+      });
   }
   async function githubAuth() {
     await signInWithPopup(auth, provider)
       .then((data) => {
         const creds = GithubAuthProvider.credentialFromResult(data);
-        const token = creds?.accessToken;
-        const user = data.user;
+        if (!creds) {
+          return;
+        }
+        const {displayName, email, uid, photoURL} = data.user
+        setUser({
+          loading: false, 
+          user: {
+            email,
+            name: displayName,
+            photoURL,
+            uid
+          }
+        })
+        console.log(user)
       })
       .catch((error) => console.log(error));
-
   }
 
   async function onSinginin() {
@@ -56,12 +91,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   }
 
   async function onSubmit(event: React.SyntheticEvent) {
-    event.preventDefault()
-    setIsLoading(true)
+    event.preventDefault();
+    setIsLoading(true);
 
     setTimeout(() => {
-      setIsLoading(false)
-    }, 3000)
+      setIsLoading(false);
+    }, 3000);
   }
 
   return (
@@ -96,12 +131,20 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
           <span className="w-full border-t" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground"> Or continue with
+          <span className="bg-background px-2 text-muted-foreground">
+            {" "}
+            Or continue with
           </span>
         </div>
       </div>
       <div className="flex flex-row justify-evenly">
-        <Button variant="outline" type="button" onClick={() => googleAuth()} className="w-40" disabled={isLoading}>
+        <Button
+          variant="outline"
+          type="button"
+          onClick={() => googleAuth()}
+          className="w-40"
+          disabled={isLoading}
+        >
           {isLoading ? (
             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
           ) : (
@@ -109,7 +152,13 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
           )}{" "}
           Google
         </Button>
-        <Button variant="outline" type="button" onClick={() => githubAuth()} className="w-40" disabled={isLoading}>
+        <Button
+          variant="secondary"
+          type="button"
+          onClick={() => githubAuth()}
+          className="w-40"
+          disabled={isLoading}
+        >
           {isLoading ? (
             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
           ) : (
@@ -119,5 +168,5 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         </Button>
       </div>
     </div>
-  )
+  );
 }

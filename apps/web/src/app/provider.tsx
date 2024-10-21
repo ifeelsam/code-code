@@ -1,6 +1,13 @@
 "use client";
 import { ThemeProvider } from "@/components/theme-provider";
+import { RecoilRoot } from "recoil";
 
 export const Providers = ({ children }: { children: React.ReactNode }) => {
-  return <ThemeProvider>{children}</ThemeProvider>;
+  return (
+    <RecoilRoot>
+      <ThemeProvider>
+        {children}
+      </ThemeProvider>
+    </RecoilRoot>
+  )
 };
